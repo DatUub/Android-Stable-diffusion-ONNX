@@ -1,18 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
     android:clickable="true"
     android:fillViewport="true"
-    android:background="@color/white"
-    android:focusableInTouchMode="true">
+    android:orientation="vertical"
+    android:padding="16dp">
+
     <androidx.appcompat.widget.LinearLayoutCompat
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <Button
             android:id="@+id/clean"
@@ -26,54 +24,59 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/FragmentSetting_SelectUnetModel" />
+
         <TextView
             android:id="@+id/unet_text"
-            android:text="- - -"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:text="- - -" />
 
         <Button
             android:id="@+id/text_encoder"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/FragmentSetting_SelectTextEncoderModel" />
+
         <TextView
             android:id="@+id/text_encoder_text"
-            android:text="- - -"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:text="- - -" />
 
         <Button
             android:id="@+id/vae_decoder"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/FragmentSetting_SelectVaeDecorderModel" />
+
         <TextView
             android:id="@+id/vae_decoder_text"
-            android:text="- - -"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:text="- - -" />
 
         <Button
             android:id="@+id/merges"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/FragmentSetting_SelectMergesFile" />
+
         <TextView
             android:id="@+id/merges_text"
-            android:text="- - -"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:text="- - -" />
 
         <Button
             android:id="@+id/vocab"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/FragmentSetting_SelectVocabFile" />
+
         <TextView
             android:id="@+id/vocab_text"
-            android:text="- - -"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:text="- - -" />
     </androidx.appcompat.widget.LinearLayoutCompat>
 </ScrollView>

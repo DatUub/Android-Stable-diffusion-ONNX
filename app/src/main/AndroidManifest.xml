@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-sdk android:minSdkVersion="30" android:targetSdkVersion="34" />
 
     <application
         android:name=".App"
@@ -17,8 +18,8 @@
         android:requestLegacyExternalStorage="true"
         android:usesCleartextTraffic="true"
         android:hardwareAccelerated ="true"
-        android:theme="@style/Theme.AndroidStablediffusionONNX"
-        tools:targetApi="31">
+        android:theme="@style/Theme.Material3.DayNight"
+        tools:targetApi="34">
         <activity
             android:name=".MainActivity"
             android:exported="true">

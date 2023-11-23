@@ -176,7 +176,13 @@ public class MainFragment extends Fragment {
                 if (mImageView.getDrawable() != null) {
                     try {
                         boolean success = FileUtils.saveImage(getActivity(), FileUtils.getBitmap(mImageView.getDrawable()));
-                        Toast.makeText(getActivity(), success ? "保存成功 success" : "保存失败 fail", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(
+                                getActivity(),
+                                success
+                                        ? getResources().getString(R.string.FragmentMain_Save_Success)
+                                        : getResources().getString(R.string.FragmentMain_Save_Failed),
+                                Toast.LENGTH_SHORT
+                        ).show();
                     } catch (Exception e) {
                         throw new RuntimeException(e);
                     }

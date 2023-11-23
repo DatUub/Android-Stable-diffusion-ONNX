@@ -6,19 +6,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
-    android:clickable="true"
     android:focusableInTouchMode="true"
     android:background="@color/white"
     tools:context=".MainActivity">
-    <androidx.appcompat.widget.LinearLayoutCompat
-        android:orientation="vertical"
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
         android:padding="16dp">
-        <androidx.appcompat.widget.LinearLayoutCompat
-            android:orientation="horizontal"
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
             <Button
                 android:id="@+id/copy"
@@ -33,88 +34,99 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
                 android:text="@string/FragmentMain_Settings" />
-        </androidx.appcompat.widget.LinearLayoutCompat>
-        <androidx.appcompat.widget.AppCompatSpinner
+        </LinearLayout>
+
+        <Spinner
             android:id="@+id/spinner"
-            android:entries="@array/Scheduler"
             android:layout_width="match_parent"
-            android:layout_height="45dp"/>
-        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_height="45dp"
+            android:entries="@array/Scheduler" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <androidx.appcompat.widget.AppCompatSpinner
+            android:orientation="horizontal">
+
+            <Spinner
                 android:id="@+id/width"
-                android:entries="@array/Resolution"
-                android:layout_weight="1"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"/>
-            <androidx.appcompat.widget.AppCompatSpinner
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:entries="@array/Resolution" />
+
+            <Spinner
                 android:id="@+id/height"
-                android:entries="@array/Resolution"
-                android:layout_weight="1"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"/>
-        </androidx.appcompat.widget.LinearLayoutCompat>
-        <androidx.appcompat.widget.LinearLayoutCompat
-            android:orientation="horizontal"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:entries="@array/Resolution" />
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
             <EditText
                 android:id="@+id/guidance"
-                android:text="5"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:gravity="center"
                 android:inputType="numberDecimal"
                 android:maxLines="1"
-                android:layout_weight="1"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"/>
+                android:text="5" />
+
             <EditText
                 android:id="@+id/step"
-                android:text="8"
-                android:inputType="numberDecimal"
-                android:gravity="center"
-                android:maxLines="1"
-                android:layout_weight="1"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"/>
-        </androidx.appcompat.widget.LinearLayoutCompat>
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:inputType="numberDecimal"
+                android:maxLines="1"
+                android:text="8" />
+        </LinearLayout>
+
         <EditText
             android:id="@+id/prompt"
-            android:text="Japanese garden at wildlife river and mountain range, highly detailed, digital illustration, artstation, concept art, matte, sharp focus, illustration, dramatic, sunset, hearthstone, art by Artgerm and Greg Rutkowski and Alphonse Mucha."
-            android:lines="2"
-            android:maxLines="2"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:inputType="text|textLongMessage|textMultiLine"
+            android:minLines="2"
+            android:text="Japanese garden at wildlife river and mountain range, highly detailed, digital illustration, artstation, concept art, matte, sharp focus, illustration, dramatic, sunset, hearthstone, art by Artgerm and Greg Rutkowski and Alphonse Mucha." />
+
         <EditText
             android:id="@+id/neg_prompt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:hint="Neg prompt"
-            android:lines="2"
-            android:maxLines="2"
+            android:minLines="2" />
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-        <androidx.appcompat.widget.LinearLayoutCompat
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
             <TextView
-                android:text="seed:"
-                android:layout_gravity="center_vertical"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="seed:" />
+
             <EditText
                 android:id="@+id/seed"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="4dp"
+                android:layout_marginRight="4dp"
+                android:gravity="center"
                 android:inputType="number"
                 android:maxLines="1"
                 android:text="0"
-                android:textSize="16sp"
-                android:gravity="center"
-                android:layout_marginLeft="4dp"
-                android:layout_marginRight="4dp"
-                android:layout_gravity="center_vertical"
-                android:layout_width="150dp"
-                android:layout_height="wrap_content"/>
+                android:textSize="16sp" />
 
             <Button
                 android:id="@+id/generate"
@@ -123,21 +135,25 @@
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
                 android:text="@string/FragmentMain_Generate" />
-        </androidx.appcompat.widget.LinearLayoutCompat>
+        </LinearLayout>
+
         <TextView
             android:id="@+id/msg"
-            android:gravity="center"
             android:layout_width="match_parent"
-            android:layout_height="45dp"/>
+            android:layout_height="45dp"
+            android:gravity="center" />
+
         <com.example.open.diffusion.SquareImageView
             android:id="@+id/image"
-            android:scaleType="centerCrop"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:scaleType="centerCrop" />
+
         <Button
             android:id="@+id/save"
-            android:text="Save/保存"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-    </androidx.appcompat.widget.LinearLayoutCompat>
+            android:layout_height="wrap_content"
+            android:text="@string/FragmentMain_Save" />
+
+    </LinearLayout>
 </ScrollView>

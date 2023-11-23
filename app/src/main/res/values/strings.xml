@@ -15,4 +15,7 @@
     <string name="FragmentMain_CopyModel">复制Assets到模型路径</string>
     <string name="FragmentMain_Settings">设置</string>
     <string name="FragmentMain_Generate">生成</string>
+    <string name="FragmentMain_Save">保存</string>
+    <string name="FragmentMain_Save_Success">保存成功</string>
+    <string name="FragmentMain_Save_Failed">保存失败</string>
 </resources>

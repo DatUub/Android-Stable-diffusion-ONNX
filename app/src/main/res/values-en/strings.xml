@@ -2,4 +2,7 @@
     <string name="FragmentMain_CopyModel">Copy assets to model path</string>
     <string name="FragmentMain_Settings">Settings</string>
     <string name="FragmentMain_Generate">Generate</string>
+    <string name="FragmentMain_Save">Save</string>
+    <string name="FragmentMain_Save_Success">Saved successfully</string>
+    <string name="FragmentMain_Save_Failed">Save failed</string>
 </resources>

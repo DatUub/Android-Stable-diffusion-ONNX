@@ -1,6 +1,7 @@
 package com.example.open.diffusion;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
@@ -8,6 +9,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -109,7 +111,7 @@ public class MainFragment extends Fragment {
                 uiHandler.post(new MyRunnable() {
                     @Override
                     public void run() {
-                        mMsgView.setText("已完成");
+                        mMsgView.setText(getResources().getString(R.string.FragmentMain_Status_Done));
                     }
                 });
             }
@@ -175,6 +177,7 @@ public class MainFragment extends Fragment {
             public void onClick(View v) {
                 if (mImageView.getDrawable() != null) {
                     try {
+                        // TODO Add metadata to image (e.g. inputs like the prompt and seed, plus app info like version and name)
                         boolean success = FileUtils.saveImage(getActivity(), FileUtils.getBitmap(mImageView.getDrawable()));
                         Toast.makeText(
                                 getActivity(),
@@ -193,10 +196,17 @@ public class MainFragment extends Fragment {
         mGesView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Dismiss keyboard
+                // TODO Solve this properly (focus remains on EditText component)
+                View focusedView = getActivity().getWindow().getCurrentFocus();
+                if (focusedView != null) {
+                    InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(focusedView.getWindowToken(), 0);
+                }
                 try {
                     if (isWorking) return;
                     isWorking = true;
-                    mMsgView.setText("初始化. . .");
+                    mMsgView.setText(getResources().getString(R.string.FragmentMain_Status_Initializing));
                     exec.execute(createRunnable());
                 }catch (Exception e){
                     e.printStackTrace();
@@ -224,6 +234,7 @@ public class MainFragment extends Fragment {
 
         final int num_inference_steps = TextUtils.isEmpty(stepText) ? 8 : Integer.parseInt(stepText);
         final double guidance_scale = TextUtils.isEmpty(guidanceText) ? 5f : Float.valueOf(guidanceText);
+        // TODO Indicate that 0 (and "") means a random seed will be selected in the UI
         final long seed = TextUtils.isEmpty(seedText) ? 0 : Long.parseLong(seedText);
         UNet.WIDTH = resolution[mWidthSpinner.getSelectedItemPosition()];
         UNet.HEIGHT = resolution[mHeightSpinner.getSelectedItemPosition()];

@@ -113,6 +113,7 @@ public class UNet {
 
         int[] timesteps = scheduler.set_timesteps(numInferenceSteps);
 
+        // TODO Show selected seed in UI to simplify reproducing prompts (easier to compare model generations)
         long seed = seedNum <= 0 ? random.nextLong() : seedNum;
         MyTensor latents = generateLatentSample(batchSize, height, width, seed, (float) scheduler.getInitNoiseSigma());
 

@@ -5,4 +5,12 @@
     <string name="FragmentMain_Save">Save</string>
     <string name="FragmentMain_Save_Success">Saved successfully</string>
     <string name="FragmentMain_Save_Failed">Save failed</string>
+    <string name="FragmentMain_Status_Initializing">Initializing...</string>
+    <string name="FragmentMain_Status_Done">Done</string>
+    <string name="FragmentSetting_ClearModels">Clear Models</string>
+    <string name="FragmentSetting_SelectUnetModel">Select the Unet model</string>
+    <string name="FragmentSetting_SelectTextEncoderModel">Select the text encoder model</string>
+    <string name="FragmentSetting_SelectVaeDecorderModel">Select the VAE decoder model</string>
+    <string name="FragmentSetting_SelectMergesFile">Select the merges file</string>
+    <string name="FragmentSetting_SelectVocabFile">Select the vocab file</string>
 </resources>

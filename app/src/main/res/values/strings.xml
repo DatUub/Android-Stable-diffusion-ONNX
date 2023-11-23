@@ -18,4 +18,12 @@
     <string name="FragmentMain_Save">保存</string>
     <string name="FragmentMain_Save_Success">保存成功</string>
     <string name="FragmentMain_Save_Failed">保存失败</string>
+    <string name="FragmentMain_Status_Initializing">初始化. . .</string>
+    <string name="FragmentMain_Status_Done">已完成</string>
+    <string name="FragmentSetting_ClearModels">清除模型</string>
+    <string name="FragmentSetting_SelectUnetModel">选择Unet模型</string>
+    <string name="FragmentSetting_SelectTextEncoderModel">选择Text encoder模型</string>
+    <string name="FragmentSetting_SelectVaeDecorderModel">选择Vae decoder模型</string>
+    <string name="FragmentSetting_SelectMergesFile">选择Merges文件</string>
+    <string name="FragmentSetting_SelectVocabFile">选择Vocab文件</string>
 </resources>

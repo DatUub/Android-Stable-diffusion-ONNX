@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Android-Stable-diffusion-ONNX</string>
+    <string name="app_name" translatable="false">Android-Stable-diffusion-ONNX</string>
     <string-array name="Resolution">
         <item>192</item>
         <item>256</item>
@@ -12,4 +12,7 @@
         <item>EulerA</item>
         <item>DPMS</item>
     </string-array>
+    <string name="FragmentMain_CopyModel">复制Assets到模型路径</string>
+    <string name="FragmentMain_Settings">设置</string>
+    <string name="FragmentMain_Generate">生成</string>
 </resources>

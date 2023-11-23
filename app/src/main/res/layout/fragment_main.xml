@@ -19,18 +19,20 @@
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <Button
                 android:id="@+id/copy"
-                android:text="复制Assets到模型路径"
-                android:layout_weight="1"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/FragmentMain_CopyModel" />
+
             <Button
                 android:id="@+id/setting"
-                android:text="设置"
-                android:layout_marginLeft="16dp"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:text="@string/FragmentMain_Settings" />
         </androidx.appcompat.widget.LinearLayoutCompat>
         <androidx.appcompat.widget.AppCompatSpinner
             android:id="@+id/spinner"
@@ -113,13 +115,14 @@
                 android:layout_gravity="center_vertical"
                 android:layout_width="150dp"
                 android:layout_height="wrap_content"/>
+
             <Button
                 android:id="@+id/generate"
-                android:text="生成"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"/>
+                android:text="@string/FragmentMain_Generate" />
         </androidx.appcompat.widget.LinearLayoutCompat>
         <TextView
             android:id="@+id/msg"

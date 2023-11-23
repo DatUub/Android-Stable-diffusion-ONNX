@@ -1,0 +1,5 @@
+<resources>
+    <string name="FragmentMain_CopyModel">Copy assets to model path</string>
+    <string name="FragmentMain_Settings">Settings</string>
+    <string name="FragmentMain_Generate">Generate</string>
+</resources>

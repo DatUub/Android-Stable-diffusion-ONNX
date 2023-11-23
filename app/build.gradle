@@ -23,18 +23,18 @@ android {
         }
     }
 
-    aaptOptions {
-        noCompress 'tflite', 'txt', 'json', "ort"
-    }
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    androidResources {
+        noCompress 'tflite', 'txt', 'json', 'ort'
+    }
 }
 
 dependencies {
-    implementation 'com.microsoft.onnxruntime:onnxruntime-android:latest.release'
+    implementation 'com.microsoft.onnxruntime:onnxruntime-android:1.15.1'
     implementation 'androidx.appcompat:appcompat:1.4.1'
     implementation 'com.google.android.material:material:1.5.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.3'

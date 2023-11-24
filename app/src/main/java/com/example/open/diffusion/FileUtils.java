@@ -2,26 +2,26 @@ package com.example.open.diffusion;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.Drawable;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
+import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
-import android.text.TextUtils;
 import android.util.Log;
 
+import com.google.gson.Gson;
+
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.nio.channels.FileChannel;
+import java.util.Map;
 
 /**
  * Created by ZTMIDGO 2023/4/21
@@ -58,11 +58,15 @@ public class FileUtils {
         Log.v("copyFile", "Copy " + fileName + " to " + outPath);
         InputStream in = assetManager.open(fileName);
         OutputStream out = new FileOutputStream(outPath + "/" + fileName);
-        byte[] buffer = new byte[4000];
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            in.transferTo(out);
+        } else {
+            byte[] buffer = new byte[4000];
 
-        int read;
-        while((read = in.read(buffer)) != -1) {
-            out.write(buffer, 0, read);
+            int read;
+            while ((read = in.read(buffer)) != -1) {
+                out.write(buffer, 0, read);
+            }
         }
 
         in.close();
@@ -119,16 +123,32 @@ public class FileUtils {
         file.delete();
     }
 
-    public static boolean saveImage(Context context, Bitmap toBitmap) throws Exception {
-        boolean success = false;
-        if(Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q) {
-            String path = MediaStore.Images.Media.insertImage(context.getContentResolver(), toBitmap, "壁纸", "搜索猫相关图片后保存的图片");
-            success = !TextUtils.isEmpty(path);
-        }else {
-            Uri insertUri = context.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, new ContentValues());
-            OutputStream outputStream = context.getContentResolver().openOutputStream(insertUri, "rw");
-            success = toBitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
-        }
+    public static boolean saveImage(Context context, Bitmap toBitmap, Map<String, String> inferfenceInputs) throws Exception {
+        ContentValues values = new ContentValues();
+        values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
+        Uri uri = context.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+
+        // Save image
+        OutputStream outputStream = context.getContentResolver().openOutputStream(uri, "rw");
+        boolean success = toBitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+        outputStream.close();
+
+        // Add EXIF
+        ParcelFileDescriptor fd = context.getContentResolver().openFileDescriptor(uri, "rw");
+        ExifInterface exif = new ExifInterface(fd.getFileDescriptor());
+        exif.setAttribute(
+                ExifInterface.TAG_SOFTWARE,
+                context.getResources().getString(R.string.app_name) + " v" + BuildConfig.VERSION_NAME
+        );
+        Gson gson = new Gson();
+        exif.setAttribute(
+                ExifInterface.TAG_IMAGE_DESCRIPTION,
+                gson.toJson(inferfenceInputs)
+        );
+        exif.saveAttributes();
+
+        fd.close();
+
         return success;
     }
 

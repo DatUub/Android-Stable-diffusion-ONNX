@@ -12,13 +12,12 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.fragment.app.Fragment;
 
 import com.example.open.diffusion.core.UNet;
@@ -26,6 +25,8 @@ import com.example.open.diffusion.core.tokenizer.EngTokenizer;
 import com.example.open.diffusion.core.tokenizer.TextTokenizer;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -51,13 +52,13 @@ public class MainFragment extends Fragment {
     private EditText mStepView;
     private EditText mPromptView;
     private EditText mNetPromptView;
-    private AppCompatSpinner mWidthSpinner;
-    private AppCompatSpinner mHeightSpinner;
-    private ProgressDialog progressDialog;
+    private Spinner mWidthSpinner;
+    private Spinner mHeightSpinner;
     private EditText mSeedView;
+    private long lastSeed = 0;
     private View mGesView;
     private View mSetView;
-    private AppCompatSpinner mSpinner;
+    private Spinner mSpinner;
     private View mSaveView;
 
     private UNet uNet;
@@ -80,14 +81,12 @@ public class MainFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         uiHandler = new Handler();
-        progressDialog = new ProgressDialog(getActivity());
-        progressDialog.setCancelable(false);
         uNet = new UNet(getActivity(), Device.CPU);
         tokenizer = new EngTokenizer(getActivity());
 
         uNet.setCallback(new UNet.Callback() {
             @Override
-            public void onStep(int maxStep, int step) {
+            public void onUNetStep(int maxStep, int step) {
                 uiHandler.post(new MyRunnable() {
                     @Override
                     public void run() {
@@ -120,6 +119,16 @@ public class MainFragment extends Fragment {
             public void onStop() {
 
             }
+
+            @Override
+            public void onDecodeStep() {
+                uiHandler.post(new MyRunnable() {
+                    @Override
+                    public void run() {
+                        mMsgView.setText(getResources().getString(R.string.FragmentMain_Status_Decoding));
+                    }
+                });
+            }
         });
     }
 
@@ -146,11 +155,18 @@ public class MainFragment extends Fragment {
         mHeightSpinner.setSelection(3);
 
         setEnable(new File(PathManager.getModelPath(getActivity())).exists());
+        Context context = getContext();
 
         view.findViewById(R.id.copy).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                progressDialog.show();
+                ProgressDialog progress = ProgressDialog.show(
+                        context,
+                        container.getResources().getString((R.string.FragmentMain_CopyModel_Working)),
+                        "",
+                        true,
+                        false
+                );
                 exec.execute(new MyRunnable() {
                     @Override
                     public void run() {
@@ -163,7 +179,7 @@ public class MainFragment extends Fragment {
                                 @Override
                                 public void run() {
                                     setEnable(new File(PathManager.getModelPath(getActivity())).exists());
-                                    progressDialog.dismiss();
+                                    progress.dismiss();
                                 }
                             });
                         }
@@ -177,8 +193,25 @@ public class MainFragment extends Fragment {
             public void onClick(View v) {
                 if (mImageView.getDrawable() != null) {
                     try {
-                        // TODO Add metadata to image (e.g. inputs like the prompt and seed, plus app info like version and name)
-                        boolean success = FileUtils.saveImage(getActivity(), FileUtils.getBitmap(mImageView.getDrawable()));
+                        HashMap<String, String> inferenceInputs = new HashMap<>();
+                        inferenceInputs.put("prompt", mPromptView.getText().toString());
+                        inferenceInputs.put("negative_prompt", mNetPromptView.getText().toString());
+                        inferenceInputs.put("seed", Long.toString(lastSeed));
+                        inferenceInputs.put("steps", mStepView.getText().toString());
+                        inferenceInputs.put("guidance", mGuidanceView.getText().toString());
+                        inferenceInputs.put("width", Integer.toString(resolution[mWidthSpinner.getSelectedItemPosition()]));
+                        inferenceInputs.put("height", Integer.toString(resolution[mHeightSpinner.getSelectedItemPosition()]));
+                        inferenceInputs.put(
+                                "scheduler",
+                                mSpinner.getSelectedItemPosition() == 0
+                                    ? "EulerA"
+                                    : "DPM"
+                        );
+                        boolean success = FileUtils.saveImage(
+                                getActivity(),
+                                FileUtils.getBitmap(mImageView.getDrawable()),
+                                inferenceInputs
+                        );
                         Toast.makeText(
                                 getActivity(),
                                 success
@@ -235,7 +268,12 @@ public class MainFragment extends Fragment {
         final int num_inference_steps = TextUtils.isEmpty(stepText) ? 8 : Integer.parseInt(stepText);
         final double guidance_scale = TextUtils.isEmpty(guidanceText) ? 5f : Float.valueOf(guidanceText);
         // TODO Indicate that 0 (and "") means a random seed will be selected in the UI
-        final long seed = TextUtils.isEmpty(seedText) ? 0 : Long.parseLong(seedText);
+        // TODO Show selected seed in UI to simplify reproducing prompts (easier to compare model generations)
+        lastSeed = TextUtils.isEmpty(seedText) ? 0 : Long.parseLong(seedText);
+        if (lastSeed == 0) {
+            lastSeed = new Random().nextLong();
+        }
+        final long seed = lastSeed;
         UNet.WIDTH = resolution[mWidthSpinner.getSelectedItemPosition()];
         UNet.HEIGHT = resolution[mHeightSpinner.getSelectedItemPosition()];
 
@@ -243,7 +281,19 @@ public class MainFragment extends Fragment {
             @Override
             public void run() {
                 try {
+                    uiHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            mMsgView.setText(getResources().getString((R.string.FragmentMain_Status_InitTokenizer)));
+                        }
+                    });
                     tokenizer.init();
+                    uiHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            mMsgView.setText(getResources().getString(R.string.FragmentMain_Status_TokenizingPrompts));
+                        }
+                    });
                     int batch_size = 1;
                     int[] textTokenized = tokenizer.encoder(prompt);
                     int[] negTokenized = tokenizer.createUncondInput(negPrompt);
@@ -263,13 +313,25 @@ public class MainFragment extends Fragment {
                     OnnxTensor textEmbeddings = OnnxTensor.createTensor(App.ENVIRONMENT, textEmbeddingArray);
                     tokenizer.close();
 
+                    uiHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            mMsgView.setText(getResources().getString(R.string.FragmentMain_Status_InitUNet));
+                        }
+                    });
                     uNet.init();
+                    uiHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            mMsgView.setText(getResources().getString(R.string.FragmentMain_Status_StartingInference));
+                        }
+                    });
                     uNet.inference(seed, num_inference_steps, textEmbeddings, guidance_scale, batch_size, UNet.WIDTH, UNet.HEIGHT, mSpinner.getSelectedItemPosition());
                 }catch (Exception e){
                     uiHandler.post(new Runnable() {
                         @Override
                         public void run() {
-                            mMsgView.setText("Error");
+                            mMsgView.setText(getResources().getString((R.string.FragmentMain_Status_Error)));
                         }
                     });
                     e.printStackTrace();

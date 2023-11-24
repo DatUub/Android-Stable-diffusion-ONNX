@@ -13,4 +13,11 @@
     <string name="FragmentSetting_SelectVaeDecorderModel">Select the VAE decoder model</string>
     <string name="FragmentSetting_SelectMergesFile">Select the merges file</string>
     <string name="FragmentSetting_SelectVocabFile">Select the vocab file</string>
+    <string name="FragmentMain_Status_Decoding">Decoding</string>
+    <string name="FragmentMain_CopyModel_Working">Copying models...</string>
+    <string name="FragmentMain_Status_InitTokenizer">Initializing tokenizer</string>
+    <string name="FragmentMain_Status_TokenizingPrompts">Tokenizing prompts</string>
+    <string name="FragmentMain_Status_InitUNet">Initializing UNet</string>
+    <string name="FragmentMain_Status_StartingInference">Starting inference</string>
+    <string name="FragmentMain_Status_Error">Error</string>
 </resources>

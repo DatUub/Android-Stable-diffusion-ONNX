@@ -34,13 +34,13 @@ public class UNet {
     private final String model = "unet/model.ort";
     public static int WIDTH = 384;
     public static int HEIGHT = 384;
-    private final Random random = new Random();
     private final Context context;
 
     private OrtSession session;
     private VaeDecoder decoder;
     private Callback callback;
     private boolean isStop;
+    // TODO Explore using builtin ML support (where available and faster)
     private int deviceId = Device.CPU;
     public UNet(Context context, int deviceId) {
         this.context = context;
@@ -107,25 +107,38 @@ public class UNet {
         isStop = true;
     }
 
-    public void inference(long seedNum, int numInferenceSteps, OnnxTensor textEmbeddings, double guidanceScale, int batchSize, int width, int height, int schedulerType) throws Exception {
+    public void inference(long seed, int numInferenceSteps, OnnxTensor textEmbeddings, double guidanceScale, int batchSize, int width, int height, int schedulerType) throws Exception {
         isStop = false;
         Scheduler scheduler = schedulerType == 0 ? new EulerAncestralDiscreteScheduler(context) : new DPMSolverMultistepScheduler();
 
         int[] timesteps = scheduler.set_timesteps(numInferenceSteps);
 
-        // TODO Show selected seed in UI to simplify reproducing prompts (easier to compare model generations)
-        long seed = seedNum <= 0 ? random.nextLong() : seedNum;
         MyTensor latents = generateLatentSample(batchSize, height, width, seed, (float) scheduler.getInitNoiseSigma());
+
+        boolean visualise = false;
 
         long[] shape = new long[]{2, 4, height / 8, width / 8};
         for (int i = 0; i < timesteps.length; i++){
+            // Optional branch, visualise progress
+            if (callback != null && visualise) {
+                callback.onBuildImage(-1, null);
+                Bitmap bitmap = decode(latents);
+                callback.onBuildImage(0, bitmap);
+            }
+
             MyTensor latentModelInput = TensorHelper.duplicate(latents.getTensor().getFloatBuffer().array(), shape);
             latentModelInput = scheduler.scale_model_input(latentModelInput, i);
 
-            if (callback != null) callback.onStep(timesteps.length, i);
+            if (callback != null) callback.onUNetStep(timesteps.length, i);
 
-            Map<String, OnnxTensor> input = createUnetModelInput(textEmbeddings, latentModelInput.getTensor(), OnnxTensor.createTensor(App.ENVIRONMENT, IntBuffer.wrap(new int[]{timesteps[i]}), new long[]{1}));
+            Map<String, OnnxTensor> input = createUnetModelInput(
+                    textEmbeddings,
+                    latentModelInput.getTensor(),
+                    OnnxTensor.createTensor(App.ENVIRONMENT, IntBuffer.wrap(new int[]{timesteps[i]}), new long[]{1})
+            );
+            // Run the UNet model (denoiser)
             OrtSession.Result result = session.run(input);
+            // NOTE Result can also be retrieved via "out_sample"
             float[][][][] datas = (float[][][][]) result.get(0).getValue();
             result.close();
 
@@ -135,7 +148,9 @@ public class UNet {
 
             performGuidance(noisePred, noisePredText, guidanceScale);
 
+            // TODO Investigate why there is a bit of a delay here
             latents = scheduler.step(new MyTensor(OnnxTensor.createTensor(App.ENVIRONMENT, noisePred), noisePred, ArrayUtils.getSizes(noisePred)), i, latents);
+
             if (isStop) {
                 if (callback != null) callback.onStop();
                 return;
@@ -145,6 +160,8 @@ public class UNet {
 
         if (callback != null) {
             callback.onBuildImage(-1, null);
+            // TODO Explore using https://github.com/madebyollin/taesd, may be good for mid-generation previews
+            // NOTE This is typically slower than individual inference steps
             Bitmap bitmap = decode(latents);
             callback.onBuildImage(0, bitmap);
             callback.onComplete();
@@ -152,6 +169,9 @@ public class UNet {
     }
 
     public Bitmap decode(MyTensor latents) throws Exception {
+        if (callback != null) {
+            callback.onDecodeStep();
+        }
         MyTensor tensor = TensorHelper.MultipleTensorByFloat(latents.getTensor().getFloatBuffer().array(), (1.0f / 0.18215f), latents.getShape());
         Map<String, OnnxTensor> decoderInput = new HashMap<>();
         decoderInput.put("latent_sample", tensor.getTensor());
@@ -172,7 +192,8 @@ public class UNet {
     }
 
     public interface Callback{
-        void onStep(int maxStep, int step);
+        void onUNetStep(int maxStep, int step);
+        void onDecodeStep();
         void onBuildImage(int status, Bitmap bitmap);
         void onComplete();
         void onStop();

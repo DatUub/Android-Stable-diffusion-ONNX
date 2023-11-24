@@ -26,4 +26,11 @@
     <string name="FragmentSetting_SelectVaeDecorderModel">选择Vae decoder模型</string>
     <string name="FragmentSetting_SelectMergesFile">选择Merges文件</string>
     <string name="FragmentSetting_SelectVocabFile">选择Vocab文件</string>
+    <string name="FragmentMain_Status_Decoding">Decoding</string>
+    <string name="FragmentMain_CopyModel_Working">Copying models...</string>
+    <string name="FragmentMain_Status_InitTokenizer">Initializing tokenizer</string>
+    <string name="FragmentMain_Status_TokenizingPrompts">Tokenizing prompts</string>
+    <string name="FragmentMain_Status_InitUNet">Initializing UNet</string>
+    <string name="FragmentMain_Status_StartingInference">Starting inference</string>
+    <string name="FragmentMain_Status_Error">Error</string>
 </resources>

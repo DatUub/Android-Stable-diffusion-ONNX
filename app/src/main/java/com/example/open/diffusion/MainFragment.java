@@ -19,6 +19,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.example.open.diffusion.core.UNet;
 import com.example.open.diffusion.core.tokenizer.EngTokenizer;
@@ -247,10 +248,21 @@ public class MainFragment extends Fragment {
             }
         });
 
+        MainFragment mainFragment = this;
+
         mSetView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getActivity().getSupportFragmentManager().beginTransaction().add(R.id.container, SettingFragment.newInstance()).addToBackStack(null).commit();
+                FragmentManager fm = getActivity().getSupportFragmentManager();
+                fm.beginTransaction()
+                        .add(
+                            R.id.container,
+                            SettingFragment.newInstance()
+                        )
+                        .addToBackStack(null)
+                        // Auto revealed on back navigation
+                        .hide(mainFragment)
+                        .commit();
             }
         });
 

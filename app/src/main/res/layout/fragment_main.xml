@@ -35,11 +35,63 @@
                 android:text="@string/FragmentMain_Settings" />
         </LinearLayout>
 
-        <Spinner
-            android:id="@+id/spinner"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:entries="@array/Scheduler" />
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Scheduler" />
+
+            <Spinner
+                android:id="@+id/spinner"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:entries="@array/Scheduler" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Width" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Height" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+
+            <Spinner
+                android:id="@+id/width"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:entries="@array/Resolution" />
+
+            <Spinner
+                android:id="@+id/height"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:entries="@array/Resolution" />
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -47,19 +99,17 @@
             android:layout_marginTop="10dp"
             android:orientation="horizontal">
 
-            <Spinner
-                android:id="@+id/width"
+            <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:entries="@array/Resolution" />
+                android:text="Guidance" />
 
-            <Spinner
-                android:id="@+id/height"
+            <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:entries="@array/Resolution" />
+                android:text="Steps" />
         </LinearLayout>
 
         <LinearLayout
@@ -70,7 +120,7 @@
             <EditText
                 android:id="@+id/guidance"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="50dp"
                 android:layout_weight="1"
                 android:gravity="center"
                 android:inputType="numberDecimal"
@@ -80,13 +130,18 @@
             <EditText
                 android:id="@+id/step"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="50dp"
                 android:layout_weight="1"
                 android:gravity="center"
                 android:inputType="numberDecimal"
                 android:maxLines="1"
                 android:text="8" />
         </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Prompt" />
 
         <EditText
             android:id="@+id/prompt"
@@ -95,6 +150,11 @@
             android:inputType="text|textLongMessage|textMultiLine"
             android:minLines="2"
             android:text="Japanese garden at wildlife river and mountain range, highly detailed, digital illustration, artstation, concept art, matte, sharp focus, illustration, dramatic, sunset, hearthstone, art by Artgerm and Greg Rutkowski and Alphonse Mucha." />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Negative Prompt" />
 
         <EditText
             android:id="@+id/neg_prompt"
@@ -105,19 +165,18 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:text="seed:" />
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Seed" />
 
             <EditText
                 android:id="@+id/seed"
-                android:layout_width="150dp"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="4dp"
                 android:layout_marginRight="4dp"
@@ -127,25 +186,33 @@
                 android:text="0"
                 android:textSize="16sp" />
 
-            <Button
-                android:id="@+id/generate"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:text="@string/FragmentMain_Generate" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/generate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="@string/FragmentMain_Generate" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
         </LinearLayout>
 
         <TextView
             android:id="@+id/msg"
             android:layout_width="match_parent"
-            android:layout_height="45dp"
+            android:layout_height="wrap_content"
             android:gravity="center" />
 
         <com.example.open.diffusion.SquareImageView
             android:id="@+id/image"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@android:drawable/alert_dark_frame"
             android:scaleType="centerCrop" />
 
         <Button

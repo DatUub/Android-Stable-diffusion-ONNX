@@ -61,6 +61,7 @@ public class MainFragment extends Fragment {
     private View mSetView;
     private Spinner mSpinner;
     private View mSaveView;
+    private View mLastSeedButton;
 
     private UNet uNet;
     private Handler uiHandler;
@@ -151,6 +152,7 @@ public class MainFragment extends Fragment {
         mSetView = view.findViewById(R.id.setting);
         mSpinner = view.findViewById(R.id.spinner);
         mSaveView = view.findViewById(R.id.save);
+        mLastSeedButton = view.findViewById(R.id.useLastSeedButton);
 
         mWidthSpinner.setSelection(3);
         mHeightSpinner.setSelection(3);
@@ -263,6 +265,13 @@ public class MainFragment extends Fragment {
                         // Auto revealed on back navigation
                         .hide(mainFragment)
                         .commit();
+            }
+        });
+
+        mLastSeedButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mSeedView.setText(Long.toString(lastSeed));
             }
         });
 

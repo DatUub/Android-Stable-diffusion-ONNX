@@ -33,4 +33,5 @@
     <string name="FragmentMain_Status_InitUNet">Initializing UNet</string>
     <string name="FragmentMain_Status_StartingInference">Starting inference</string>
     <string name="FragmentMain_Status_Error">Error</string>
+    <string name="FragmentMain_UseLastSeed">Use Last Seed</string>
 </resources>
